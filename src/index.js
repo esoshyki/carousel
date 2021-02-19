@@ -4,6 +4,6 @@ import './style.sass';
 import Carousel from './Carousel';
 
 ReactDOM.render(
-  <Carousel />,
+  <Carousel/>,
   document.getElementById('root')
 );

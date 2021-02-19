@@ -1,7 +1,46 @@
 @import ./styles/_media
+@import ./styles/_flex
 
 .root
   background-color: black
+  position: relative
+  overflow: hidden
+  +flex
   +xs
     width: 100%
+    height: 100vh
     min-height: 100vh
+
+.carousel
+  height: 100%
+  position: absolute
+  +flex(row)
+  transition: 1s ease-in-out
+
+.controls
+  position: fixed
+  height: 100px
+  width: 90vw
+  top: calc( 50% - 50px )
+  left: 5vw
+
+.leftArrow, .rightArrow
+  width: 50px
+  height: 100px
+  background-position: center
+  background-repeat: no-repeat
+  position: absolute
+  &:hover
+    cursor: pointer
+    transform: scale(0.95)
+    transition: 0.2s ease-out
+
+
+.leftArrow
+  top: 0
+  left: 0
+
+.rightArrow
+  top: 0
+  right: 0
+
