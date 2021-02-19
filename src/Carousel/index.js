@@ -4,6 +4,7 @@ import slides from './slides/slides';
 import Slide from './slides/Slide';
 import leftArrow from '../assets/icons/leftArrow.png';
 import rightArrow from '../assets/icons/rightArrow.png';
+import getAllChunk from './lib/array.chunk'
 
 
 const Carousel = ({
@@ -17,11 +18,15 @@ const Carousel = ({
   const [_slideWidth, setSlideWidth] = useState("100%");
   const [_slideHeight, setSlideHeight] = useState("100%");
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [_slides, setSlides] = useState(null);
+  const [left, setLeft] = useState(0);
 
   const resize = () => {
     const carouselWidth = containerNode.current.offsetWidth;
     const carouselHeight = containerNode.current.offsetHeight;
-
+    setSlides(getAllChunk({
+      array: slides, size: slidesCount, current: currentSlide
+    }));
     setSlideWidth(carouselWidth / slidesCount);
     setSlideHeight(carouselHeight);
   };
@@ -55,7 +60,7 @@ const Carousel = ({
       <div className={classes.carousel} 
         ref={slidesNode}
         style={{
-        left: 0
+        left: left
       }}>
 
         <div className={classes.controls}>
@@ -71,7 +76,7 @@ const Carousel = ({
             />
         </div>
 
-        {slides && slides.map((slide, key) => {
+        {_slides && _slides.map((slide, key) => {
           const { title, description, link, background } = slide;
           return <Slide 
                   title={title} 
