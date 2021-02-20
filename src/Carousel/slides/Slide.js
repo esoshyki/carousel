@@ -10,7 +10,6 @@ const Slide = ({
   height,
   padding
 }) => {
-  console.log(width)
   return (
     <div className={classes.root} style={{
       background: background,

@@ -1,25 +1,43 @@
 const getChunk = (array, _size, start) => {
-  let chunk = [];
   let size = _size;
+  console.log(start)
   if (start < 0) {
-    chunk = array.slice(start);
-    size = _size + start;   
-  }
-
-  for (let i = 0; i < size; i++) {
-    chunk.push(array[(start + i) % array.length])
+    const reduce = array.length % size !== 0 ? array.length % size : size;
+    start = array.length - reduce;
   };
-  return chunk
-
-}
+  if (!array[start]) {
+    start = 0;
+  }
+  return array.slice(start, start % array.length + size);
+};
 
 const getAllChunk = ({array, size, current}) => {
 
-  const cur = getChunk(array, size, current);
-  const prev = getChunk(array, size, current - size)
-  const next = getChunk(array, size, current + size);
+  const maxChunks = Math.round(array.length / size);
+  
+  const chunk = current % maxChunks;
 
-  return [...prev, ...cur, ...next]
-}
+  console.log(`start`, chunk)
+
+  const cur = getChunk(array, size, chunk * size);
+  const prev = getChunk(array, size, chunk * size - size)
+  const next = getChunk(array, size, chunk * size + size);
+
+  console.log({
+    cur, prev, next
+  })
+
+  return ({
+    cur, prev, next
+  })
+};
+
+const array = [0, 1, 2];
+
+getAllChunk({
+  array,
+  size: 2,
+  current: -2
+})
 
 export default getAllChunk

@@ -15,7 +15,9 @@
   height: 100%
   position: absolute
   +flex(row)
-  transition: 1s ease-in-out
+
+.chunk
+  +flex(row, center)
 
 .controls
   position: fixed
@@ -23,6 +25,7 @@
   width: 90vw
   top: calc( 50% - 50px )
   left: 5vw
+  z-index: 5
 
 .leftArrow, .rightArrow
   width: 50px

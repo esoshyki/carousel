@@ -4,8 +4,9 @@ import slides from './slides/slides';
 import Slide from './slides/Slide';
 import leftArrow from '../assets/icons/leftArrow.png';
 import rightArrow from '../assets/icons/rightArrow.png';
-import getAllChunk from './lib/array.chunk'
+import getChunks from './lib/array.chunk';
 
+const transition = '1s ease-out'
 
 const Carousel = ({
   slidesCount = 1,
@@ -14,80 +15,131 @@ const Carousel = ({
 
   const containerNode = useRef(null);
   const slidesNode = useRef();
+  const chunkNode = useRef();
 
   const [_slideWidth, setSlideWidth] = useState("100%");
   const [_slideHeight, setSlideHeight] = useState("100%");
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [_slides, setSlides] = useState(null);
+  const [currentChunk, setCurrentChunk] = useState(0);
+  const [chunks, setChunks] = useState(null);
   const [left, setLeft] = useState(0);
+  const [width, setWidth] = useState(null);
+  const [height, setHeight] = useState(null);
+  const [disable, setDisable] = useState(false);
 
   const resize = () => {
-    const carouselWidth = containerNode.current.offsetWidth;
-    const carouselHeight = containerNode.current.offsetHeight;
-    setSlides(getAllChunk({
-      array: slides, size: slidesCount, current: currentSlide
-    }));
-    setSlideWidth(carouselWidth / slidesCount);
-    setSlideHeight(carouselHeight);
+    const containerWidth = containerNode.current.offsetWidth;
+    const containerHeight = containerNode.current.offsetHeight;
+    setLeft(-containerWidth);
+    setWidth(containerWidth);
+    setHeight(containerHeight);
+    setSlideWidth(containerWidth / slidesCount);
+    setSlideHeight(containerHeight);
   };
 
   useEffect(() => {
-    window.addEventListener('resize', resize)
+    window.addEventListener('resize', resize);
   }, []);
 
-  useEffect(() => {
-    const left = currentSlide * _slideWidth;
-    slidesNode.current.style.left = `${-left}px`;
-  }, [currentSlide])
 
-  useEffect(resize, slidesCount);
+  useEffect(() => {
+    const chunks = getChunks({
+      array: slides, 
+      size: slidesCount,
+      current: currentChunk
+    });
+    setChunks(chunks);
+    setLeft(-width);
+  }, [currentChunk])
+
+  useEffect(resize, [slidesCount]);
 
   const slideToLeft = () => {
-    if (currentSlide + slidesCount < slides.length) {
-      setCurrentSlide(currentSlide + slidesCount)
-    };
+    setLeft(left - width);
+    setDisable(true);
+    setTimeout(() => {
+      setCurrentChunk(currentChunk + 1)
+    }, 1050)
   };
 
   const slideToRight = () => {
-    if (currentSlide - slidesCount >= 0) {
-      setCurrentSlide(currentSlide - slidesCount)
-    };
+    setLeft(left + width);
+    setDisable(true);
+    setTimeout(() => {
+      const newChunk = currentChunk - 1;
+      if (newChunk >= 0) {
+        setCurrentChunk(newChunk)
+      } else {
+        const maxChunks = Math.round(slides.length / slidesCount);
+        setCurrentChunk(maxChunks - 1)
+      }
+    }, 1050)
   };
+
+  const Chunk = ({chunk, _ref}) => {
+    return (
+      <div 
+        className={classes.chunk}
+        ref={_ref || null}
+        style={{
+          color: "red",
+          width: width,
+          height: height
+        }}>
+        {chunk && chunk.map((slide, key) => {
+          const { title, description, link, background, Content } = slide;
+  
+          return <Slide 
+            title={title} 
+            description={description}
+            link={link}
+            background={background}
+            key={key}
+            width={_slideWidth}
+            height={_slideHeight}
+            padding={slidesPadding}
+            Content={Content}
+            />
+        })}
+      </div>
+    )
+  };
+
+  const transitionEnd = () => {
+    slidesNode.current.style.transition = null;
+    setDisable(false);
+    setTimeout(() => {
+      slidesNode.current.style.transition = transition;
+      setDisable(false);   
+    }, 100)
+  }
 
   return (
     <div className={classes.root} ref={containerNode}>
+      
+      <div className={classes.controls}>
+        <div 
+          className={classes.leftArrow} 
+          style={{backgroundImage: `url(${leftArrow})`}}
+          onClick={disable ? null : slideToRight}
+          />
+        <div 
+          className={classes.rightArrow} 
+          style={{backgroundImage: `url(${rightArrow})`}}
+          onClick={disable ? null : slideToLeft}
+          />
+      </div>
 
       <div className={classes.carousel} 
         ref={slidesNode}
+        onTransitionEnd={transitionEnd}
         style={{
-        left: left
+        left: left,
+        transition: transition
       }}>
 
-        <div className={classes.controls}>
-          <div 
-            className={classes.leftArrow} 
-            style={{backgroundImage: `url(${leftArrow})`}}
-            onClick={slideToRight}
-            />
-          <div 
-            className={classes.rightArrow} 
-            style={{backgroundImage: `url(${rightArrow})`}}
-            onClick={slideToLeft}
-            />
-        </div>
-
-        {_slides && _slides.map((slide, key) => {
-          const { title, description, link, background } = slide;
-          return <Slide 
-                  title={title} 
-                  description={description}
-                  link={link}
-                  background={background}
-                  key={key}
-                  width={_slideWidth}
-                  height={_slideHeight}
-                  padding={slidesPadding}
-                  />})}
+        {chunks && <Chunk chunk={chunks.prev}/>}
+        {chunks && <Chunk chunk={chunks.cur} _ref={chunkNode}/>}
+        {chunks && <Chunk chunk={chunks.next}/>}
       </div>
     </div>
   )
