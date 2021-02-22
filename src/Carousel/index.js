@@ -7,8 +7,6 @@ import rightArrow from '../assets/icons/rightArrow.png';
 import getChunks from './lib/array.chunk';
 
 const transition = '1s ease-out';
-let touchx = 0;
-
 const Carousel = ({
   slidesCount = 1,
   slidesPadding = 10
@@ -17,6 +15,7 @@ const Carousel = ({
   const containerNode = useRef(null);
   const slidesNode = useRef();
   const chunkNode = useRef();
+  const startTouch = useRef();
 
   const [_slideWidth, setSlideWidth] = useState("100%");
   const [_slideHeight, setSlideHeight] = useState("100%");
@@ -41,7 +40,6 @@ const Carousel = ({
     window.addEventListener('resize', resize);
   }, []);
 
-
   useEffect(() => {
     const chunks = getChunks({
       array: slides, 
@@ -55,7 +53,6 @@ const Carousel = ({
   useEffect(resize, [slidesCount]);
 
   const slideToLeft = () => {
-    console.log('slide to left')
     setLeft(left - width);
     setDisable(true);
     setTimeout(() => {
@@ -64,7 +61,6 @@ const Carousel = ({
   };
 
   const slideToRight = () => {
-    console.log('slide to right')
     setLeft(left + width);
     setDisable(true);
     setTimeout(() => {
@@ -117,31 +113,35 @@ const Carousel = ({
   };
 
   const onTouchStart = e => {
-    console.log(touchx)
+    slidesNode.current.style.transition = null;
     const x = e.changedTouches[0].pageX;
-    touchx = x;
+    startTouch.current = x;
   };
 
-  const onTouchMove = e => {
-    console.log('touchmove')
+  const onTouchMove = (e) => {
     const x = e.changedTouches[0].pageX;
-    const distance = x - touchx;
+    const distance = x - startTouch.current;
+    const changeSlideWidth = containerNode.current.offsetWidth / 2;
+    if (Math.abs(distance) > changeSlideWidth ) {
+      slidesNode.current.style.transition = transition;
+      if (distance < 0) {
+        slideToLeft()
+      } else {
+        slideToRight()
+      }
+    }
     slidesNode.current.style.left = `${left + distance}px`;
   };
 
   const onTouchEnd = e => {
+    slidesNode.current.style.transition = transition;
     slidesNode.current.style.left = `${left}px`;
-    console.log('touchend')
-    touchx = 0;
   }
 
   return (
     <div 
       className={classes.root} 
       ref={containerNode}
-      onTouchStartCapture={onTouchStart}
-      onTouchMoveCapture={onTouchMove}
-      onTouchEnd={onTouchEnd}
       >
       
       <div className={classes.controls}>
@@ -157,9 +157,12 @@ const Carousel = ({
           />
       </div>
 
-      <div className={classes.carousel} 
+      <div className={classes.carousel}
         ref={slidesNode}
         onTransitionEnd={transitionEnd}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+        onTouchMove={onTouchMove}
         style={{
         left: left,
         transition: transition

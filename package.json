@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "webpack serve --mode development --config webpack.config.js",
+    "start": "webpack serve --history-api-fallback --config webpack.config.js",
     "build": "webpack --mode development --config webpack.config.js",
     "predeploy": "yarn run build",
     "deploy": "gh-pages -d public"
