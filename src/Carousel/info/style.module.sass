@@ -1,0 +1,21 @@
+@import ../styles/_flex
+@import ../styles/_media
+
+.root
+  width: 100%
+  +flex(row, center, center)
+
+.simpleChunk
+  width: 35px
+  height: 2px
+  border: none
+  background-color: #107e6f
+  margin: 0 2px
+
+.selectedChunk
+  width: 35px
+  height: 2px
+  border: 2px solid #107e6f
+  background-size: cover
+  transform: scale(1.05)
+  margin: 0 2px

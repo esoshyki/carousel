@@ -5,6 +5,7 @@ import Slide from './slides/Slide';
 import leftArrow from '../assets/icons/leftArrow.png';
 import rightArrow from '../assets/icons/rightArrow.png';
 import getChunks from './lib/array.chunk';
+import Info from './info';
 
 const transition = '1s ease-out';
 const Carousel = ({
@@ -20,6 +21,7 @@ const Carousel = ({
   const [_slideWidth, setSlideWidth] = useState("100%");
   const [_slideHeight, setSlideHeight] = useState("100%");
   const [currentChunk, setCurrentChunk] = useState(0);
+  const [chunksCount, setChunksCount] = useState(Math.round(slides.length / slidesCount))
   const [chunks, setChunks] = useState(null);
   const [left, setLeft] = useState(0);
   const [width, setWidth] = useState(null);
@@ -155,6 +157,10 @@ const Carousel = ({
           style={{backgroundImage: `url(${rightArrow})`}}
           onClick={disable ? null : slideToLeft}
           />
+      </div>
+
+      <div className={classes.info}>
+        <Info chunks={chunksCount} currentChunk={currentChunk} />
       </div>
 
       <div className={classes.carousel}
