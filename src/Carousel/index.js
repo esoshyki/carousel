@@ -6,7 +6,8 @@ import leftArrow from '../assets/icons/leftArrow.png';
 import rightArrow from '../assets/icons/rightArrow.png';
 import getChunks from './lib/array.chunk';
 
-const transition = '1s ease-out'
+const transition = '1s ease-out';
+let touchx = 0;
 
 const Carousel = ({
   slidesCount = 1,
@@ -54,6 +55,7 @@ const Carousel = ({
   useEffect(resize, [slidesCount]);
 
   const slideToLeft = () => {
+    console.log('slide to left')
     setLeft(left - width);
     setDisable(true);
     setTimeout(() => {
@@ -62,6 +64,7 @@ const Carousel = ({
   };
 
   const slideToRight = () => {
+    console.log('slide to right')
     setLeft(left + width);
     setDisable(true);
     setTimeout(() => {
@@ -111,10 +114,35 @@ const Carousel = ({
       slidesNode.current.style.transition = transition;
       setDisable(false);   
     }, 100)
+  };
+
+  const onTouchStart = e => {
+    console.log(touchx)
+    const x = e.changedTouches[0].pageX;
+    touchx = x;
+  };
+
+  const onTouchMove = e => {
+    console.log('touchmove')
+    const x = e.changedTouches[0].pageX;
+    const distance = x - touchx;
+    slidesNode.current.style.left = `${left + distance}px`;
+  };
+
+  const onTouchEnd = e => {
+    slidesNode.current.style.left = `${left}px`;
+    console.log('touchend')
+    touchx = 0;
   }
 
   return (
-    <div className={classes.root} ref={containerNode}>
+    <div 
+      className={classes.root} 
+      ref={containerNode}
+      onTouchStartCapture={onTouchStart}
+      onTouchMoveCapture={onTouchMove}
+      onTouchEnd={onTouchEnd}
+      >
       
       <div className={classes.controls}>
         <div 

@@ -5,11 +5,10 @@
   background-color: black
   position: relative
   overflow: hidden
+  width: 100%
+  height: 100vh
+  min-height: 100vh
   +flex
-  +xs
-    width: 100%
-    height: 100vh
-    min-height: 100vh
 
 .carousel
   height: 100%
@@ -20,12 +19,16 @@
   +flex(row, center)
 
 .controls
+  display: block
   position: fixed
   height: 100px
   width: 90vw
   top: calc( 50% - 50px )
   left: 5vw
   z-index: 5
+  +xs
+    display: none
+  
 
 .leftArrow, .rightArrow
   width: 50px

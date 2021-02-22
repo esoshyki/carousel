@@ -9,7 +9,7 @@ module.exports = {
     rules: [
       {
         test: /\.(png|jpe?g|gif)$/i,
-        loader: "file-loader"
+        loader: "file-loader",
       },
       {
         test: /\.(js|jsx)$/,
@@ -31,12 +31,12 @@ module.exports = {
     extensions: ["*", ".js", ".jsx"]
   },
   output: {
-    path: path.resolve(__dirname, "dist/"),
-    publicPath: "/",
-    filename: "bundle.js"
+    path: path.resolve(__dirname, './public'),     // путь к каталогу выходных файлов - папка public
+    publicPath: './',
+    filename: "bundle.js" 
   },
   devServer: {
-    contentBase: path.join(__dirname, 'dist'),
+    contentBase: path.join(__dirname, 'public'),
     compress: true,
     port: 3000,
   },
