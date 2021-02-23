@@ -57,6 +57,8 @@ Sorry, I have not been able to do the implementation of the transition to the cu
 
 [deploy](https://esoshyki.github.io/carousel/)
 
+[video](https://youtu.be/-tlHygDaDII)
+
 
 
 
