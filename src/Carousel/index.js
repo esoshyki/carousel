@@ -10,7 +10,8 @@ import Info from './info';
 const transition = '1s ease-out';
 const Carousel = ({
   slidesCount = 1,
-  slidesPadding = 10
+  slidesPadding = 10,
+  direction= "row",
   }) => {
 
   const containerNode = useRef(null);
@@ -84,7 +85,8 @@ const Carousel = ({
         style={{
           color: "red",
           width: width,
-          height: height
+          height: height,
+          flexDirection: direction
         }}>
         {chunk && chunk.map((slide, key) => {
           const { title, description, link, background, Content } = slide;
@@ -123,7 +125,7 @@ const Carousel = ({
   const onTouchMove = (e) => {
     const x = e.changedTouches[0].pageX;
     const distance = x - startTouch.current;
-    const changeSlideWidth = containerNode.current.offsetWidth / 2;
+    const changeSlideWidth = containerNode.current.offsetWidth / 3;
     if (Math.abs(distance) > changeSlideWidth ) {
       slidesNode.current.style.transition = transition;
       if (distance < 0) {
@@ -138,7 +140,21 @@ const Carousel = ({
   const onTouchEnd = e => {
     slidesNode.current.style.transition = transition;
     slidesNode.current.style.left = `${left}px`;
-  }
+  };
+
+  const setSelectedChunk = (idx) => {
+    slidesNode.current.style.transition = transition;
+    slidesNode.current.classList.add("disapear");
+    setTimeout(() => {
+      setCurrentChunk(idx);
+      slidesNode.current.classList.remove("disapear");
+      slidesNode.current.classList.add("appear");
+      setTimeout(() => {
+        slidesNode.current.classList.remove("appear")
+      })
+    }, 500);
+
+  };
 
   return (
     <div 
@@ -160,7 +176,10 @@ const Carousel = ({
       </div>
 
       <div className={classes.info}>
-        <Info chunks={chunksCount} currentChunk={currentChunk} />
+        <Info 
+          chunks={chunksCount} 
+          currentChunk={currentChunk} 
+          setChunk={setSelectedChunk}/>
       </div>
 
       <div className={classes.carousel}
