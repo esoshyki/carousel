@@ -8,9 +8,10 @@ const Slide = ({
   link,
   width,
   height,
-  padding
+  padding,
+  Content
 }) => {
-  return (
+  return Content ? <Content /> : (
     <div className={classes.root} style={{
       background: background,
       width, height, paddingLeft: padding, paddingRight: padding

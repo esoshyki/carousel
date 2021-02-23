@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
 import classes from './style.module.sass';
-import slides from './slides/slides';
 import Slide from './slides/Slide';
 import leftArrow from '../assets/icons/leftArrow.png';
 import rightArrow from '../assets/icons/rightArrow.png';
@@ -12,6 +11,7 @@ const Carousel = ({
   slidesCount = 1,
   slidesPadding = 10,
   direction= "row",
+  slides
   }) => {
 
   const containerNode = useRef(null);

@@ -33,6 +33,7 @@ const slides = [
     },
     background: `url(${spices})`
   },
+
 ];
 
 export default slides

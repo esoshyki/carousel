@@ -39,5 +39,27 @@ Create basic **!!** markup in **index.html**, and add before closing tag **</bod
 All done. 
 Now we can write our carousel.
 
+Carousel was made as React component, which takes next props:
+ * directly **slides**. It's array of objects with slide data. It can be either **property set** for building slides by pattern (it's not very bad idea, because we can get our slides from backend like json files, and easily transform them to react-components), either we can create absolutely any components and keep them in array, in order for them to be later transferred in Slide function, as **Content** property. 
+ * **slidesCount**. The count of slides, which will be shown in carousel chunk at a time.
+
+So. In desktop version I created arrow buttons to change carousel slide. 
+In mobile version changing change is foreseen by swiping.
+
+I am facing a pretty big problem when did the infinite scroll functionality. Without it, task would be much more easier.
+
+Ultimately, I decided to generate three ``<div>`` elements for each change in the current frame. Previous, current and next chunk.
+As for me, it works not bad.
+
+Sorry, I have not been able to do the implementation of the transition to the current chunk well enough due to the lack of time, since I work and I have children, and there is not much free time. I don’t want to keep you waiting long enough, but I am sure I can do everything perfectly. If you look and want me to do better please let me know.
+
+
+
+[deploy](https://esoshyki.github.io/carousel/)
+
+
+
+
+
 
 
