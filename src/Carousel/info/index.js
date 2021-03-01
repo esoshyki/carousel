@@ -26,6 +26,7 @@ const Info = ({chunks, currentChunk, setChunk}) => {
     <div className={classes.root}>
       {chunks && new Array(chunks).fill(0).map((_, idx) => {
         return <div 
+                key={idx}
                 className={idx === currentChunk % chunks ? classes.selectedChunk : classes.simpleChunk} 
                 onClick={() => setChunk(idx)}
                 />

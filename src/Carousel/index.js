@@ -18,6 +18,7 @@ const Carousel = ({
   const slidesNode = useRef();
   const chunkNode = useRef();
   const startTouch = useRef();
+  const isMouseDown = useRef(false);
 
   const [_slideWidth, setSlideWidth] = useState("100%");
   const [_slideHeight, setSlideHeight] = useState("100%");
@@ -116,18 +117,25 @@ const Carousel = ({
     }, 100)
   };
 
-  const onTouchStart = e => {
+  const startSwipe = e => {
+    if (e.type === "mousedown") {
+      isMouseDown.current = true;
+    };
     slidesNode.current.style.transition = null;
-    const x = e.changedTouches[0].pageX;
+    const x = e.type === "touchstart" ? e.changedTouches[0].pageX : e.pageX;
     startTouch.current = x;
   };
 
-  const onTouchMove = (e) => {
-    const x = e.changedTouches[0].pageX;
+  const moveSwipe = (e) => {
+    if (e.type === "mousemove" && !isMouseDown.current) {
+      return
+    };
+    const x = e.type === "touchmove" ? e.changedTouches[0].pageX : e.pageX;
     const distance = x - startTouch.current;
     const changeSlideWidth = containerNode.current.offsetWidth / 3;
     if (Math.abs(distance) > changeSlideWidth ) {
       slidesNode.current.style.transition = transition;
+      isMouseDown.current = false;
       if (distance < 0) {
         slideToLeft()
       } else {
@@ -137,7 +145,10 @@ const Carousel = ({
     slidesNode.current.style.left = `${left + distance}px`;
   };
 
-  const onTouchEnd = e => {
+  const endSwipe = e => {
+    if (e.type === "mouseup") {
+      isMouseDown.current = false;
+    };
     slidesNode.current.style.transition = transition;
     slidesNode.current.style.left = `${left}px`;
   };
@@ -185,9 +196,12 @@ const Carousel = ({
       <div className={classes.carousel}
         ref={slidesNode}
         onTransitionEnd={transitionEnd}
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
-        onTouchMove={onTouchMove}
+        onTouchStart={startSwipe}
+        onMouseDown={startSwipe}
+        onTouchEnd={endSwipe}
+        onTouchMove={moveSwipe}
+        onMouseMove={moveSwipe}
+        onMouseUp={endSwipe}
         style={{
         left: left,
         transition: transition
