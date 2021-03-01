@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
 import classes from './style.module.sass';
-import Slide from './slides/Slide';
 import leftArrow from '../assets/icons/leftArrow.png';
 import rightArrow from '../assets/icons/rightArrow.png';
 import getChunks from './lib/array.chunk';
@@ -9,7 +8,6 @@ import Info from './info';
 const transition = '1s ease-out';
 const Carousel = ({
   slidesCount = 1,
-  slidesPadding = 10,
   direction= "row",
   slides
   }) => {
@@ -78,31 +76,36 @@ const Carousel = ({
     }, 1050)
   };
 
+  /* CHUNK. 
+  
+  I tried to implement an assignment about multiple slides on a page using chunks.
+  The idea was that with every change of Carousel state in part of slides, 
+  we get three chunks of slides depending on the slides count, that we get from 
+  prop's parameter, and which tells us, how many slides we must show on out page 
+  together.
+
+  We get previous chunk, current and next. This way I have implemented an infinite carousel loop,
+  and it allows you to keep in DOM only three parts on slides in potentially huge carousel
+  of slides.
+
+  It's seems to me, that a haven't understand you correctly. 
+  If anything, write me, I'll try do to this as You need
+
+*/
+
   const Chunk = ({chunk, _ref}) => {
     return (
       <div 
         className={classes.chunk}
         ref={_ref || null}
         style={{
-          color: "red",
           width: width,
           height: height,
           flexDirection: direction
         }}>
-        {chunk && chunk.map((slide, key) => {
-          const { title, description, link, background, Content } = slide;
-  
-          return <Slide 
-            title={title} 
-            description={description}
-            link={link}
-            background={background}
-            key={key}
-            width={_slideWidth}
-            height={_slideHeight}
-            padding={slidesPadding}
-            Content={Content}
-            />
+        {chunk && chunk.map((Slide, key) => {
+ 
+          return <Slide key={key}/>
         })}
       </div>
     )
